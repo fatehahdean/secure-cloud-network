@@ -1,0 +1,30 @@
+name: Security Validation Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-architecture:
+    name: Validate Security Architecture
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run architecture security validator
+        run: python3 architecture_validator.py
+
+      - name: Validate Bicep template syntax
+        run: |
+          az bicep install
+          az bicep build --file main.bicep
+          echo "Bicep template syntax is valid"
