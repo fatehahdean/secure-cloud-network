@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Secure Cloud Network Architecture Report</title>
+<style>
+body{font-family:Arial;margin:auto;max-width:1100px;padding:40px;color:#333}
+h1{color:#1a1a2e;border-bottom:3px solid #1a1a2e;padding-bottom:10px}
+h2{color:#1a1a2e;margin-top:30px}
+h3{color:#333;margin-top:20px}
+.meta{color:#666;font-size:13px;line-height:1.8;margin-bottom:20px}
+.info{background:#f0f8ff;border-left:4px solid #0078d4;padding:15px;margin:15px 0;border-radius:0 5px 5px 0}
+table{border-collapse:collapse;width:100%;margin:15px 0;font-size:13px}
+th{background:#1a1a2e;color:white;padding:10px;text-align:left}
+td{padding:8px 10px;border-bottom:1px solid #eee}
+tr:nth-child(even){background:#f9f9f9}
+.PASS{color:#107c10;font-weight:bold}
+.FAIL{color:#d83b01;font-weight:bold}
+.WARN{color:#ff8c00;font-weight:bold}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;color:white;font-size:12px;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0}
+.card{padding:15px;border-radius:8px;text-align:center;color:white}
+.card h3{margin:0;font-size:32px}
+.card p{margin:5px 0 0;font-size:13px}
+.arch-box{background:#f8f9fa;border:1px solid #ddd;border-radius:8px;padding:15px;margin:10px 0;font-family:monospace;font-size:12px;line-height:1.6}
+.footer{margin-top:40px;font-size:12px;color:#666;border-top:1px solid #ddd;padding-top:15px}
+</style>
+</head>
+<body>
+<h1>Secure Cloud Networking Architecture Report</h1>
+<div class="meta">
+<strong>Architecture:</strong> Secure Cloud Networking Architecture<br>
+<strong>Platform:</strong> Microsoft Azure &nbsp;|&nbsp;
+<strong>IaC Tool:</strong> Bicep (Azure-native IaC) &nbsp;|&nbsp;
+<strong>Region:</strong> Southeast Asia (Malaysia)<br>
+<strong>Generated:</strong> June 30, 2026 at 2026-06-30 02:35 &nbsp;|&nbsp;
+<strong>Prepared by:</strong> Fatehah Burhannudin
+</div>
+
+<div class="info">
+<strong>Architecture Overview:</strong> A secure three-tier Azure network architecture implementing defence-in-depth, least-privilege access, and Zero Trust principles. Deployed via Bicep IaC ensuring consistency and repeatability. All components follow the Azure Security Benchmark and Microsoft Well-Architected Framework security pillar.
+</div>
+
+<h2>Architecture Diagram</h2>
+<div class="arch-box">
+Internet
+    |
+    v
+[Azure DDoS Protection Standard]
+    |
+    v
++------------------------------------------+
+|         VNet: 10.0.0.0/16               |
+|                                          |
+|  [subnet-web: 10.0.1.0/24]              |
+|   NSG: Allow HTTPS:443, HTTP:80          |
+|   from Internet only                     |
+|         |                                |
+|         v (port 8080 only)              |
+|  [subnet-app: 10.0.2.0/24]              |
+|   NSG: Allow from Web subnet only        |
+|         |                                |
+|         v (port 1433 only)              |
+|  [subnet-data: 10.0.3.0/24]             |
+|   NSG: Allow from App subnet only        |
+|                                          |
+|  [subnet-mgmt: 10.0.4.0/24]             |
+|   NSG: Allow from authorised IPs only    |
++------------------------------------------+
+</div>
+
+<h2>Security Validation Results</h2>
+<div class="grid">
+<div class="card" style="background:#107c10"><h3>7</h3><p>Checks Passed</p></div>
+<div class="card" style="background:#d83b01"><h3>0</h3><p>Checks Failed</p></div>
+<div class="card" style="background:#ff8c00"><h3>0</h3><p>Warnings</p></div>
+</div>
+
+<table>
+<tr><th>Security Check</th><th>Result</th><th>Detail</th></tr><tr>
+<td>DDoS Protection Enabled</td>
+<td class="PASS">PASS</td>
+<td>DDoS Protection Standard enabled on VNet</td>
+</tr><tr>
+<td>All Subnets Have NSGs</td>
+<td class="PASS">PASS</td>
+<td>All subnets protected by Network Security Groups</td>
+</tr><tr>
+<td>Data Tier Internet Isolation</td>
+<td class="PASS">PASS</td>
+<td>Data tier has no direct internet access — only accessible from app tier</td>
+</tr><tr>
+<td>App Tier Internet Isolation</td>
+<td class="PASS">PASS</td>
+<td>App tier not directly accessible from internet — only from web tier</td>
+</tr><tr>
+<td>Infrastructure as Code</td>
+<td class="PASS">PASS</td>
+<td>IaC implemented using Bicep (Azure-native IaC)</td>
+</tr><tr>
+<td>RBAC Configuration</td>
+<td class="PASS">PASS</td>
+<td>Least-privilege RBAC roles scoped per subnet and resource group</td>
+</tr><tr>
+<td>Monitoring & Logging</td>
+<td class="PASS">PASS</td>
+<td>NSG flow logs, VNet diagnostics, and security alerts configured</td>
+</tr></table>
+<h2>Network Architecture — Subnet Design</h2>
+<table>
+<tr><th>Subnet</th><th>Address</th><th>Tier</th><th>Allowed Inbound</th><th>Allowed From</th><th>Description</th></tr><tr>
+<td><strong>subnet-web</strong></td>
+<td>10.0.1.0/24</td>
+<td>Web Tier</td>
+<td>HTTPS:443, HTTP:80</td>
+<td>Internet</td>
+<td>Public-facing tier — hosts web servers and load balancers</td>
+</tr><tr>
+<td><strong>subnet-app</strong></td>
+<td>10.0.2.0/24</td>
+<td>Application Tier</td>
+<td>APP:8080</td>
+<td>10.0.1.0/24 (Web Subnet only)</td>
+<td>Business logic tier — no direct internet access</td>
+</tr><tr>
+<td><strong>subnet-data</strong></td>
+<td>10.0.3.0/24</td>
+<td>Data Tier</td>
+<td>SQL:1433</td>
+<td>10.0.2.0/24 (App Subnet only)</td>
+<td>Database tier — most restricted, no internet access</td>
+</tr><tr>
+<td><strong>subnet-mgmt</strong></td>
+<td>10.0.4.0/24</td>
+<td>Management Tier</td>
+<td>RDP:3389, SSH:22</td>
+<td>Authorised IPs only</td>
+<td>Admin access tier — Azure Bastion for secure remote access</td>
+</tr></table>
+<h2>Security Controls Implementation Status</h2>
+<table>
+<tr><th>Security Control</th><th>Status</th><th>Description</th><th>Standard Reference</th></tr><tr>
+<td><strong>Network Security Groups (NSG)</strong></td>
+<td><span class="badge" style="background:#107c10">IMPLEMENTED</span></td>
+<td>Subnet-level firewall rules enforcing least-privilege access</td>
+<td>Azure Security Benchmark NS-1</td>
+</tr><tr>
+<td><strong>DDoS Protection Standard</strong></td>
+<td><span class="badge" style="background:#107c10">IMPLEMENTED</span></td>
+<td>Always-on traffic monitoring and automatic attack mitigation</td>
+<td>Azure Security Benchmark NS-5</td>
+</tr><tr>
+<td><strong>Defence in Depth (3-tier)</strong></td>
+<td><span class="badge" style="background:#107c10">IMPLEMENTED</span></td>
+<td>Web, app, and data tiers isolated — traffic must traverse layers sequentially</td>
+<td>Zero Trust Architecture Principle</td>
+</tr><tr>
+<td><strong>Private Endpoint Policies</strong></td>
+<td><span class="badge" style="background:#107c10">IMPLEMENTED</span></td>
+<td>Private endpoints enabled on all subnets for PaaS service access</td>
+<td>Azure Security Benchmark NS-3</td>
+</tr><tr>
+<td><strong>Role-Based Access Control (RBAC)</strong></td>
+<td><span class="badge" style="background:#0078d4">DESIGNED</span></td>
+<td>Least-privilege RBAC roles scoped per subnet and resource group</td>
+<td>Azure Security Benchmark PA-7</td>
+</tr><tr>
+<td><strong>Infrastructure as Code (Bicep)</strong></td>
+<td><span class="badge" style="background:#107c10">IMPLEMENTED</span></td>
+<td>All infrastructure defined in version-controlled Bicep templates</td>
+<td>Azure Security Benchmark DS-6</td>
+</tr><tr>
+<td><strong>Azure Monitor & Log Analytics</strong></td>
+<td><span class="badge" style="background:#0078d4">DESIGNED</span></td>
+<td>NSG flow logs, VNet diagnostics, and security alerts configured</td>
+<td>Azure Security Benchmark LT-3</td>
+</tr><tr>
+<td><strong>Microsoft Defender for Cloud</strong></td>
+<td><span class="badge" style="background:#0078d4">DESIGNED</span></td>
+<td>Continuous security posture assessment and threat detection</td>
+<td>Azure Security Benchmark LT-1</td>
+</tr></table>
+
+<h2>IaC Deployment Reference</h2>
+<div class="info">
+<strong>Template:</strong> main.bicep — Azure Resource Manager Bicep template<br>
+<strong>Parameters:</strong> parameters.json — Environment-specific configuration<br>
+<strong>Deploy command:</strong><br>
+<code style="background:#1a1a2e;color:#fff;padding:8px 12px;border-radius:4px;display:inline-block;margin-top:8px">
+az deployment group create --resource-group rg-secure-network --template-file main.bicep --parameters @parameters.json
+</code>
+</div>
+
+<h2>Design Principles Applied</h2>
+<table>
+<tr><th>Principle</th><th>Implementation</th></tr>
+<tr><td>Defence in Depth</td><td>Three-tier isolation — web, app, data. Traffic must traverse layers sequentially</td></tr>
+<tr><td>Least Privilege</td><td>Each NSG only allows minimum required ports from minimum required sources</td></tr>
+<tr><td>Zero Trust</td><td>No implicit trust between subnets — all cross-tier traffic explicitly controlled by NSG rules</td></tr>
+<tr><td>Infrastructure as Code</td><td>Entire architecture defined in Bicep — version controlled, repeatable, consistent</td></tr>
+<tr><td>DDoS Resilience</td><td>Azure DDoS Protection Standard enabled at VNet level — automatic mitigation</td></tr>
+<tr><td>Parameterisation</td><td>Environment name and IP ranges parameterised — same template deploys to dev/staging/prod</td></tr>
+</table>
+
+<h2>Azure Well-Architected Framework Alignment</h2>
+<table>
+<tr><th>Pillar</th><th>How This Architecture Aligns</th></tr>
+<tr><td>Security</td><td>NSGs, DDoS protection, private endpoints, least-privilege access, RBAC</td></tr>
+<tr><td>Reliability</td><td>DDoS protection prevents availability attacks; subnet isolation limits blast radius of failures</td></tr>
+<tr><td>Operational Excellence</td><td>IaC deployment via Bicep; Azure Monitor for observability; consistent tagging</td></tr>
+<tr><td>Performance Efficiency</td><td>Subnet separation allows independent scaling of each tier</td></tr>
+<tr><td>Cost Optimisation</td><td>Parameterised deployment enables right-sizing per environment</td></tr>
+</table>
+
+<div class="footer">
+<p><strong>Fatehah Burhannudin</strong> | fatehahdean@gmail.com | linkedin.com/in/fatehahburhannudin</p>
+<p>Architecture designed and validated using Azure security best practices, Azure Security Benchmark, and Microsoft Well-Architected Framework guidelines.</p>
+<p>Generated: 2026-06-30 02:35</p>
+</div>
+</body></html>

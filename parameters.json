@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "production"
+    },
+    "location": {
+      "value": "southeastasia"
+    },
+    "vnetAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "webSubnetPrefix": {
+      "value": "10.0.1.0/24"
+    },
+    "appSubnetPrefix": {
+      "value": "10.0.2.0/24"
+    },
+    "dataSubnetPrefix": {
+      "value": "10.0.3.0/24"
+    },
+    "mgmtSubnetPrefix": {
+      "value": "10.0.4.0/24"
+    }
+  }
+}
