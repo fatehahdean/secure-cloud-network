@@ -24,6 +24,8 @@ A secure three-tier Azure network architecture implementing defence-in-depth, le
 ## Security Validation Results
 
 7 automated security checks — **7 Passed | 0 Failed | 0 Warnings**
+<img width="810" height="215" alt="Screenshot 2026-07-01 at 1 08 27 AM" src="https://github.com/user-attachments/assets/46169ea4-a342-487f-b5e3-7d7cca996c3d" />
+
 
 ## How to Deploy
 
